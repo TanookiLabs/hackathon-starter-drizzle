@@ -1,0 +1,1 @@
+Commit all changes to git with a descriptive commit message that summarizes what was changed. Push to the main branch on GitHub. Then confirm the Vercel deployment is building by checking the Vercel dashboard or CLI. Show the deployment URL when done.
