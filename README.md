@@ -9,6 +9,7 @@ Based on the [official Vercel Supabase Starter](https://github.com/vercel/next.j
 - **Drizzle ORM** for type-safe database queries (schema-first, auto-syncs to Supabase)
 - **Tailwind CSS** + **shadcn/ui** components
 - **Claude Code config** (CLAUDE.md + custom slash commands)
+- **Automatic database migrations** on every Vercel deploy
 - Ready to deploy on **Vercel**
 
 ## Quick Start
@@ -21,12 +22,6 @@ cd my-project
 npm install
 ```
 
-### 2. Configure environment
-
-```bash
-cp .env.local.example .env.local
-```
-
 ### 2. Set up Supabase
 
 - Go to [supabase.com/dashboard](https://supabase.com/dashboard) and create a new project
@@ -36,6 +31,12 @@ cp .env.local.example .env.local
 > ⚠️ **Important:** Supabase's Drizzle example uses port `6543` (Transaction Pooler), which breaks `db:push`. **Change the port to `5432`** (Session Pooler) before pasting into `.env.local`.
 >
 > It should look like: `postgresql://postgres.YOURREF:PASSWORD@aws-X-REGION.pooler.supabase.com:5432/postgres`
+
+### 3. Configure environment
+
+```bash
+cp .env.local.example .env.local
+```
 
 Edit `.env.local` and paste in your values:
 - `NEXT_PUBLIC_SUPABASE_URL` — your Supabase project URL
@@ -71,23 +72,25 @@ claude
 # Go to vercel.com/new → Import your GitHub repo → Deploy
 ```
 
-Don't forget to add your environment variables in Vercel → Settings → Environment Variables.
+Add your environment variables in Vercel → Settings → Environment Variables (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `DATABASE_URL`).
+
+Database schema migrations run automatically on every deploy — the build command runs `drizzle-kit push` before `next build`, so your production database stays in sync with your code.
 
 ## Using Claude Code
 
 This project comes with a `CLAUDE.md` and custom slash commands pre-configured. Open Claude Code in this directory and try:
 
-| Command      | What It Does                                      |
-| ------------ | ------------------------------------------------- |
-| `/plan`      | Turn your idea into a requirements + build plan   |
-| `/build`     | Execute the plan step by step                     |
-| `/add-table` | Add a new table to the Drizzle schema             |
-| `/add-ai`    | Add an AI feature (image gen, text gen, chat)     |
-| `/design`    | Build or redesign a UI from a description         |
-| `/fix`       | Debug and fix the current error                   |
-| `/snapshot`  | Save a local git checkpoint                       |
-| `/deploy`    | Commit, push to GitHub, and deploy via Vercel     |
-| `/help`      | Show all available commands and tips               |
+| Command      | What It Does                                                       |
+| ------------ | ------------------------------------------------------------------ |
+| `/plan`      | Turn your idea into a requirements + build plan                    |
+| `/build`     | Execute the plan step by step                                      |
+| `/add-table` | Add a new table to the Drizzle schema                              |
+| `/add-ai`    | Add an AI feature (image gen, text gen, chat)                      |
+| `/design`    | Build or redesign a UI from a description                          |
+| `/fix`       | Debug and fix the current error                                    |
+| `/snapshot`  | Save a local git checkpoint                                        |
+| `/deploy`    | Commit, push to GitHub, and deploy (schema migrates automatically) |
+| `/help`      | Show all available commands and tips                                |
 
 ## Adding Features
 
@@ -120,6 +123,8 @@ export const products = pgTable("products", {
 npm run db:push
 ```
 
+This pushes your schema to the dev database (from `.env.local`). When you deploy to Vercel, the same command runs automatically against the production database.
+
 ### Query data
 
 ```typescript
@@ -143,6 +148,18 @@ npm run db:studio
 ```
 
 Opens a visual data browser at localhost:4983.
+
+## How Deployment Works
+
+```
+You edit lib/db/schema.ts locally
+  → npm run db:push syncs to dev database
+  → git push to GitHub
+  → Vercel builds: runs drizzle-kit push (syncs prod database) then next build
+  → Your app and database are both updated
+```
+
+No manual migration step. Code and schema deploy together.
 
 ## Project Structure
 
@@ -182,12 +199,12 @@ CLAUDE.md                     ← Claude Code project config
 
 Copy `.env.local.example` to `.env.local` and fill in the values you need:
 
-| Variable                               | Required              | Where to Get It                            |
-| -------------------------------------- | --------------------- | ------------------------------------------ |
-| `NEXT_PUBLIC_SUPABASE_URL`             | Yes                   | Supabase dashboard → Settings → API        |
-| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Yes                   | Supabase dashboard → Settings → API        |
+| Variable                               | Required              | Where to Get It                                            |
+| -------------------------------------- | --------------------- | ---------------------------------------------------------- |
+| `NEXT_PUBLIC_SUPABASE_URL`             | Yes                   | Supabase dashboard → Project Overview                      |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Yes                   | Supabase dashboard → Project Overview                      |
 | `DATABASE_URL`                         | Yes                   | Supabase → Connect → ORM → Drizzle (change port to `5432`) |
-| `REPLICATE_API_TOKEN`                  | For image/video gen   | replicate.com/account/api-tokens           |
-| `OPENAI_API_KEY`                       | For text gen (OpenAI) | platform.openai.com/api-keys               |
-| `STRIPE_SECRET_KEY`                    | For payments          | dashboard.stripe.com/apikeys               |
-| `RESEND_API_KEY`                       | For email             | resend.com/api-keys                        |
+| `REPLICATE_API_TOKEN`                  | For image/video gen   | replicate.com/account/api-tokens                           |
+| `OPENAI_API_KEY`                       | For text gen (OpenAI) | platform.openai.com/api-keys                               |
+| `STRIPE_SECRET_KEY`                    | For payments          | dashboard.stripe.com/apikeys                               |
+| `RESEND_API_KEY`                       | For email             | resend.com/api-keys                                        |
