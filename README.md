@@ -16,7 +16,7 @@ Based on the [official Vercel Supabase Starter](https://github.com/vercel/next.j
 ### 1. Clone and install
 
 ```bash
-git clone <this-repo-url> my-project
+git clone git@github.com:TanookiLabs/hackathon-starter-drizzle.git my-project
 cd my-project
 npm install
 ```
