@@ -19,8 +19,7 @@ Available commands:
 
 - /fix — Debug and fix the current error
 - /snapshot — Save a local git checkpoint of your progress
-- /deploy — Commit, push to GitHub, and deploy to Vercel
-- /db-push-prod — Push schema changes to the production database
+- /deploy — Commit, push to GitHub, deploy to Vercel, and sync database schema if changed
 - /help — Show this help message
 
 **Recommended workflow:**
