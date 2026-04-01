@@ -11,7 +11,7 @@ Available commands:
 **Building:**
 
 - /new-page — Create a new page with navigation
-- /add-table — Create a new Supabase database table with RLS
+- /add-table — Add a new table to the Drizzle schema and push to database
 - /add-ai — Add an AI feature (image gen, text gen, chat)
 - /design — Build or redesign a UI from a description
 
@@ -20,6 +20,7 @@ Available commands:
 - /fix — Debug and fix the current error
 - /snapshot — Save a local git checkpoint of your progress
 - /deploy — Commit, push to GitHub, and deploy to Vercel
+- /db-push-prod — Push schema changes to the production database
 - /help — Show this help message
 
 **Recommended workflow:**
