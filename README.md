@@ -30,16 +30,19 @@ cp .env.local.example .env.local
 ### 2. Set up Supabase
 
 - Go to [supabase.com/dashboard](https://supabase.com/dashboard) and create a new project
-- Go to **Project Overview** and copy your
-- Project URL
-- Publishable key
-- Direct Connection String (NOTE: ***replace `[YOUR-PASSWORD]` with your database password***)
-<img width="446" height="398" alt="SCR-20260331-siny" src="https://github.com/user-attachments/assets/91403117-3644-46f8-9cc1-fbe52755f813" />
+- Go to **Project Overview** and copy your **Project URL** and **Publishable key**
+- Go to **Connect** (top of page) → **ORM** tab → select **Drizzle** → copy the `DATABASE_URL`
+
+> ⚠️ **Important:** Supabase's Drizzle example uses port `6543` (Transaction Pooler), which breaks `db:push`. **Change the port to `5432`** (Session Pooler) before pasting into `.env.local`.
+>
+> It should look like: `postgresql://postgres.YOURREF:PASSWORD@aws-X-REGION.pooler.supabase.com:5432/postgres`
 
 Edit `.env.local` and paste in your values:
 - `NEXT_PUBLIC_SUPABASE_URL` — your Supabase project URL
 - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` — your Supabase anon key
-- `DATABASE_URL` — the transaction pooler connection string (replace `[YOUR-PASSWORD]` with your database password)
+- `DATABASE_URL` — the connection string from above, with port changed to `5432`
+
+> If you get a **password authentication error**, go to **Project Settings → Database → Reset database password** and update the password in your `DATABASE_URL`.
 
 ### 4. Push the database schema
 
@@ -183,7 +186,7 @@ Copy `.env.local.example` to `.env.local` and fill in the values you need:
 | -------------------------------------- | --------------------- | ------------------------------------------ |
 | `NEXT_PUBLIC_SUPABASE_URL`             | Yes                   | Supabase dashboard → Settings → API        |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Yes                   | Supabase dashboard → Settings → API        |
-| `DATABASE_URL`                         | Yes                   | Supabase dashboard → Connect → Transaction pooler |
+| `DATABASE_URL`                         | Yes                   | Supabase → Connect → ORM → Drizzle (change port to `5432`) |
 | `REPLICATE_API_TOKEN`                  | For image/video gen   | replicate.com/account/api-tokens           |
 | `OPENAI_API_KEY`                       | For text gen (OpenAI) | platform.openai.com/api-keys               |
 | `STRIPE_SECRET_KEY`                    | For payments          | dashboard.stripe.com/apikeys               |
