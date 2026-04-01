@@ -33,7 +33,7 @@ cp .env.local.example .env.local
 - Go to **Project Overview** and copy your
 - Project URL
 - Publishable key
-- Direct Connection String
+- Direct Connection String (NOTE: ***replace `[YOUR-PASSWORD]` with your database password***)
 <img width="446" height="398" alt="SCR-20260331-siny" src="https://github.com/user-attachments/assets/91403117-3644-46f8-9cc1-fbe52755f813" />
 
 Edit `.env.local` and paste in your values:
