@@ -21,17 +21,20 @@ cd my-project
 npm install
 ```
 
-### 2. Set up Supabase
-
-- Go to [supabase.com/dashboard](https://supabase.com/dashboard) and create a new project
-- Go to **Settings → API** and copy your project URL and anon/publishable key
-- Click the **Connect** button at the top and copy the **Transaction pooler** connection string
-
-### 3. Configure environment
+### 2. Configure environment
 
 ```bash
 cp .env.local.example .env.local
 ```
+
+### 2. Set up Supabase
+
+- Go to [supabase.com/dashboard](https://supabase.com/dashboard) and create a new project
+- Go to **Project Overview** and copy your
+- Project URL
+- Publishable key
+- Direct Connection String
+<img width="446" height="398" alt="SCR-20260331-siny" src="https://github.com/user-attachments/assets/91403117-3644-46f8-9cc1-fbe52755f813" />
 
 Edit `.env.local` and paste in your values:
 - `NEXT_PUBLIC_SUPABASE_URL` — your Supabase project URL
